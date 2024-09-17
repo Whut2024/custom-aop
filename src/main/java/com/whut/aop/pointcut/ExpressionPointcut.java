@@ -18,7 +18,7 @@ public class ExpressionPointcut implements Pointcut {
 
 
     @Override
-    public boolean matcher(Method method, Class<?> targetClass) {
+    public boolean matches(Method method, Class<?> targetClass) {
         return true;
     }
 }
