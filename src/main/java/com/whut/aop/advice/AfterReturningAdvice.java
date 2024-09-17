@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
  * @since 2024-09-17
  */
 @AllArgsConstructor
-public class BeforeAdvice implements MethodInterceptor {
+public class AfterReturningAdvice implements MethodInterceptor {
 
     private final Method method;
 
@@ -18,7 +18,10 @@ public class BeforeAdvice implements MethodInterceptor {
 
     @Override
     public Object invoke(MethodInvocation methodInvocation) throws Throwable {
-        method.invoke(object);
-        return methodInvocation.proceed();
+        try {
+            return methodInvocation.proceed();
+        } finally {
+            method.invoke(object);
+        }
     }
 }
