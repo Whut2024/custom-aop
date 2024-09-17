@@ -1,5 +1,5 @@
 import com.whut.aop.advice.annotation.*;
-import com.whut.aop.advisor.Advisor;
+import com.whut.aop.advisor.DefaultAdvisor;
 
 import java.util.List;
 
@@ -13,27 +13,27 @@ public class AnnotationTest {
 
 
         @Before("execution(* m1(Object))")
-        void before() {
+        public void before() {
             System.out.println("before");
         }
 
         @Around("execution(* m1(Object))")
-        void around() {
+        public void around() {
             System.out.println("around");
         }
 
         @After("execution(* m1(Object))")
-        void after() {
+        public void after() {
             System.out.println("after");
         }
 
         @AfterReturning("execution(* m1(Object))")
-        void afterReturning() {
+        public void afterReturning() {
             System.out.println("after returning");
         }
 
         @AfterThrowing("execution(* m1(Object))")
-        void afterThrowing() {
+        public void afterThrowing() {
             System.out.println("after throwing");
         }
 
@@ -41,7 +41,7 @@ public class AnnotationTest {
     }
 
     public static void main(String[] args) {
-        final List<Advisor> advisorList = AdviceAnnotationUtil.resolveAdvisorFromClass(AnnotationAdvisor.class);
+        final List<DefaultAdvisor> advisorList = AdviceAnnotationUtil.resolveAdvisorFromClass(AnnotationAdvisor.class);
         System.out.println(advisorList);
         advisorList.forEach(System.out::println);
     }

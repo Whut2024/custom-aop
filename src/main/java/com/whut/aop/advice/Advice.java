@@ -11,6 +11,13 @@ import com.whut.aop.chain.MethodInvocation;
  */
 public interface Advice {
 
+    /**
+     * 调用方法执行
+     *
+     * @param methodInvocation 方法调用对象
+     * @return 执行结果
+     * @throws Throwable 抛出执行过程中可能遇到的异常
+     */
     Object invoke(MethodInvocation methodInvocation) throws Throwable;
 
 }

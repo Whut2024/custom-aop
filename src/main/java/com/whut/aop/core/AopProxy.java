@@ -10,14 +10,10 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 /**
- *
  * @author whut2024
  * @since 2024-09-17
  */
 public class AopProxy {
-
-
-
 
 
     @AllArgsConstructor
@@ -25,6 +21,16 @@ public class AopProxy {
 
         private final ProxyFactory proxyFactory;
 
+        /**
+         * 代理方法的增强逻辑在此方法中形成调用链并执行
+         *
+         * @param proxy 被代理对象
+         * @param method 被代理的方法
+         * @param args 被代理方法的参数
+         * @param methodProxy 方法代理对象
+         * @return 执行结果
+         * @throws Throwable 抛出执行过程中可能遇到的异常
+         */
         @Override
         public Object intercept(Object proxy, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
             // get original class information

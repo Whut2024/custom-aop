@@ -6,6 +6,7 @@ import net.sf.cglib.proxy.MethodProxy;
 import java.util.List;
 
 /**
+ * 调用链对象
  * @author whut2024
  * @since 2024-09-17
  */
@@ -30,6 +31,9 @@ public class DefaultMethodInvocation implements MethodInvocation {
         this.adviceList = adviceList;
     }
 
+    /**
+     * 递归调用所有增强的方法
+     */
     @Override
     public Object proceed() throws Throwable {
         if (index == adviceList.size()) {

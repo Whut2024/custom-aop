@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 
 /**
  * always matching
+ *
  * @author whut2024
  * @since 2024-09-17
  */
@@ -13,7 +14,8 @@ public class TruePointcut implements Pointcut {
         return true;
     }
 
-    private TruePointcut(){}
+    private TruePointcut() {
+    }
 
 
     private volatile static Pointcut pointcut;

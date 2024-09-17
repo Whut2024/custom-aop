@@ -6,6 +6,7 @@ import com.whut.aop.pointcut.TruePointcut;
 import lombok.Getter;
 
 /**
+ * 默认切面，封装切点和增强逻辑
  * @author whut2024
  * @since 2024-09-17
  */
