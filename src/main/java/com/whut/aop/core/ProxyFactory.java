@@ -22,19 +22,26 @@ import java.util.stream.Collectors;
  * @author whut2024
  * @since 2024-09-17
  */
-@AllArgsConstructor
+
 public class ProxyFactory {
 
     @Getter
-    private Object target;
+    private final Object target;
 
-    private Class<?>[] implementedInterfaces;
+    private final Class<?>[] implementedInterfaces;
 
-    private List<DefaultAdvisor> advisorList = new ArrayList<>();
+    private final List<DefaultAdvisor> advisorList;
 
-    private List<Advice> adviceList;
+    private final List<Advice> adviceList = new ArrayList<>();
 
-    private Class<?> superClass;
+    private final Class<?> superClass;
+
+    public ProxyFactory(Object target, Class<?>[] implementedInterfaces, List<DefaultAdvisor> advisorList, Class<?> superClass) {
+        this.target = target;
+        this.implementedInterfaces = implementedInterfaces;
+        this.advisorList = advisorList;
+        this.superClass = superClass;
+    }
 
     private final transient ConcurrentHashMap<String, List<Advice>> adviceCacheMap = new ConcurrentHashMap<>();
 
