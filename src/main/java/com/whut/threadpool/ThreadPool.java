@@ -1,16 +1,16 @@
 package com.whut.threadpool;
 
-import threadpool.PoolExceptionHandler;
-import threadpool.PoolRejectPolicy;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author liuqiao
  * @since 2024-11-21
  */
+@SuppressWarnings("all")
 public class ThreadPool {
 
     public static void main(String[] args) {
@@ -56,17 +56,15 @@ public class ThreadPool {
                 }
             }
 
-            synchronized (workerSet) {
-                workerSet.remove(this);
-            }
+            threadNumbersLock.lock();
+            threadNumber--;
+            threadNumbersLock.unlock();
 
             System.out.println(Thread.currentThread().getName() + " 结束");
         }
     }
 
     private final BlockingQueue<Runnable> queue;
-
-    private final Set<Worker> workerSet;
 
     private final PoolRejectPolicy<Runnable> rejectPolicy;
 
@@ -77,6 +75,11 @@ public class ThreadPool {
     private int maxSize;
 
     private long expire;
+
+    private final ReentrantLock threadNumbersLock;
+
+    private volatile int threadNumber;
+
 
     public int getCoreSize() {
         return coreSize;
@@ -105,7 +108,7 @@ public class ThreadPool {
     // 初始化线程池
     public ThreadPool(int coreSize, int maxSize, long expire, BlockingQueue<Runnable> queue, PoolRejectPolicy<Runnable> rejectPolicy, PoolExceptionHandler exceptionHandler) {
         this.queue = queue;
-        workerSet = new HashSet<>();
+        this.threadNumbersLock = new ReentrantLock();
         this.coreSize = coreSize;
         this.maxSize = maxSize;
         this.expire = expire;
@@ -115,24 +118,28 @@ public class ThreadPool {
 
     // 添加任务
     public void execute(Runnable task) {
-        synchronized (workerSet) {
-            if (workerSet.size() < coreSize) {
+        threadNumbersLock.lock();
+        try {
+            if (threadNumber < coreSize) {
                 // 线程数小于核心线程数
                 final Worker worker = new Worker(task, Long.MAX_VALUE / 1000001);
-                workerSet.add(worker);
+                threadNumber++;
                 worker.start();
                 return;
             } else if (!queue.isFull()) {
                 // 阻塞队列未满
                 queue.put(task);
                 return;
-            } else if (workerSet.size() < maxSize) {
+            } else if (threadNumber < maxSize) {
                 // 线程数小于最大线程数
                 final Worker worker = new Worker(task, expire);
-                workerSet.add(worker);
+                threadNumber++;
                 worker.start();
                 return;
             }
+        } finally {
+            threadNumbersLock.unlock();
+
         }
 
         // 拒绝策略
